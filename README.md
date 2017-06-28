@@ -5,7 +5,8 @@ Yabancı kelimeleri Türkçeye çevirin !
 
   - Google Translate alt yapısı
   - Clipboard listener
-  -  Yabancı dökümanları hızlıca okuyun
+  - Yabancı dökümanları hızlıca okuyun
+  - Bildirim özelliği(Sadece Linux)
 
 ### Harici kütüphaneler
 - pyperclip
@@ -42,6 +43,8 @@ $ python2 translate.py --clean
 Daha sistematik ve modüler yapacağım umarım :p
 
 ## Ekran Görüntüleri
+![notify](screenshot/notify.png)
+
 ![alt 
 text](https://raw.githubusercontent.com/OguzBey/TRanslater/master/screenshot/ss.png)
 
