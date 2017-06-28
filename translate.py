@@ -11,7 +11,7 @@ from time import sleep
 reload(sys)
 sys.setdefaultencoding("UTF-8")
 
-__version__ = "1.0.1"
+__version__ = "1.1.1"
 __author__ = "OguzBey"
 __contact__ = "cfmelun@gmail.com" 
 
@@ -49,7 +49,8 @@ class Translater(object):
 		pass
 
 	def notify(self, title, message):
-		cmd = 'notify-send --app-name=TRanslater --urgency=low --expire-time=3000 "%s" "%s"'%(title, message)
+		cmd = 'notify-send --app-name=TRanslater --urgency=low  "%s" "%s"'%(title, message)
+		#--expire-time=10000
 		system(cmd)
 
 	def copy(self):
@@ -85,7 +86,7 @@ class Translater(object):
 			self.anlam = cek.fetchone()
 			if self.anlam:
 				if self.name in self.columns:
-					self.notify(self.c_word + " -- " + self.name, self.anlam[0].split(",")[0])
+					self.notify(self.c_word + " -- " + self.name, self.anlam[0])
 					print self.colors['yellow']+self.name+": "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
 			else:
 				pass
@@ -125,7 +126,7 @@ class Translater(object):
 					table = self.names2[strr]
 					column = self.columns[table]
 					self.printable = self.join_mean(self.translated[1][i][1])
-					self.notify(self.c_word + " -- " + self.translated[1][i][0], self.printable.split(",")[0])
+					self.notify(self.c_word + " -- " + self.translated[1][i][0], self.printable)
 					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
 					self.cursor.execute("insert into %s(id,%s) values(?,?)"%(table,column),(self.id,self.printable))
 
