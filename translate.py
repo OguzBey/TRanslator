@@ -201,8 +201,8 @@ class Translater(object):
 			self.offline_mod(word)
 			print ""
 		
-if len(sys.argv) == 3:
-	if sys.argv[2] == "--clean":
+if len(sys.argv) == 2:
+	if sys.argv[1] == "--clean":
 		Translater().clean_db()
 	else:
 		pass
