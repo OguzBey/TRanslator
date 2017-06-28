@@ -43,7 +43,7 @@ $ python2 translate.py --clean
 Daha sistematik ve modüler yapacağım umarım :p
 
 ## Ekran Görüntüleri
-![notify](screenshots/notify.png)
+![notify](screenshot/notify.png)
 
 ![alt 
 text](https://raw.githubusercontent.com/OguzBey/TRanslater/master/screenshot/ss.png)
