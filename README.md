@@ -16,6 +16,7 @@ Yabancı kelimeleri Türkçeye çevirin !
 ### İhtiyaçlar
 
 - xclip paketini kurmanız gerekmekte.
+- notify-send programı linuxta yüklü olması gerekmekte
 
 ```sh
 $ cd TRanslater
