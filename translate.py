@@ -11,7 +11,7 @@ from time import sleep
 reload(sys)
 sys.setdefaultencoding("UTF-8")
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __author__ = "OguzBey"
 __contact__ = "cfmelun@gmail.com" 
 
@@ -24,38 +24,22 @@ class Translater(object):
 		self.database = "dictionary.db"
 		self.connection = sqlite3.connect(self.database)
 		self.cursor = self.connection.cursor()
-		self.columns = ['i_anlam','f_anlam','z_anlam','e_anlam','b_anlam','s_anlam','zz_anlam']
-		self.names = ['isim','fiil','zarf','edat','baglac','sifat','zamir']
+		self.columns = {'isim':'i_anlam','fiil':'f_anlam','zarf':'z_anlam','edat':'e_anlam','baglac':'b_anlam','sifat':'s_anlam','zamir':'zz_anlam'}
+		self.names2 = {'isim':'isim','zarf':'zarf','bağlaç':'baglac','sıfat':'sifat','zamir':'zamir','fiil':'fiil','edat':'edat'}
 	def clean_db(self):
 		self.cursor.execute("drop table kelimeler")
-		for i in self.names:
+		for key, value in self.columns.iteritems():
 			try:
-				self.cursor.execute("drop table %s" %i)
+				self.cursor.execute("drop table %s" %key)
 			except:
 				pass
 		self.cursor.execute('''CREATE TABLE kelimeler(id INTEGER PRIMARY KEY autoincrement,
 			kelime text not null)''')
-		self.cursor.execute('''CREATE TABLE isim(id INTEGER NOT NULL,
-			i_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
-		self.cursor.execute('''CREATE TABLE sifat(id INTEGER NOT NULL,
-			s_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
-		self.cursor.execute('''CREATE TABLE zarf(id INTEGER NOT NULL,
-			z_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
-		self.cursor.execute('''CREATE TABLE edat(id INTEGER NOT NULL,
-			e_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
-		self.cursor.execute('''CREATE TABLE fiil(id INTEGER NOT NULL,
-			f_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
-		self.cursor.execute('''CREATE TABLE baglac(id INTEGER NOT NULL,
-			b_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
-		self.cursor.execute('''CREATE TABLE zamir(id INTEGER NOT NULL,
-			zz_anlam text not null,
-			FOREIGN KEY(id) REFERENCES kelimeler(id))''')
+		for table,column in self.columns.iteritems():
+
+			self.cursor.execute('''CREATE TABLE %s(id INTEGER NOT NULL,
+				%s text not null,
+				FOREIGN KEY(id) REFERENCES kelimeler(id))''' %(table,column))
 		system('clear')
 		print "Veritabanı temizlendi..."
 		pass
@@ -67,6 +51,7 @@ class Translater(object):
 		self.c_word = pyperclip.paste()
 		self.c_word = self.c_word.rstrip(" ")
 		self.c_word = self.c_word.lstrip(" ")
+		self.c_word = self.c_word.lower()
 		if len(self.c_word) > 1 and len(self.c_word) < 20:
 			if self.c_word.count(" ") < 2:
 				return True
@@ -88,26 +73,14 @@ class Translater(object):
 		pass
 
 	def offline_mod(self,word):
-		for i in range(0,6):
-			self.name = self.names[i]
-			self.column = self.columns[i]
+		for table, column in self.columns.iteritems():
+			self.name = table
+			self.column = column
 			cek = self.cursor.execute("select %s from %s where id in(select id from kelimeler where kelime =?)" %(self.column,self.name),(word,))
 			self.anlam = cek.fetchone()
 			if self.anlam:
-				if self.name == "isim":
-					print self.colors['yellow']+"İsim: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
-				elif self.name == "fiil":
-					print self.colors['yellow']+"Fiil: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
-				elif self.name == "zarf":
-					print self.colors['yellow']+"Zarf: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
-				elif self.name == "edat":
-					print self.colors['yellow']+"Edat: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
-				elif self.name == "baglac":
-					print self.colors['yellow']+"Bağlaç: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
-				elif self.name == "sifat":
-					print self.colors['yellow']+"Sıfat: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
-				else:
-					print self.colors['yellow']+"Zamir: "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
+				if self.name in self.columns:
+					print self.colors['yellow']+self.name+": "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
 			else:
 				pass
 	
@@ -141,45 +114,13 @@ class Translater(object):
 			for i in range(0,self.sayi):
 				print "--"*20
 				print self.colors['yellow']+self.translated[1][i][0]+": \n"+self.colors['reset']
-				if self.translated[1][i][0] == "isim":
-					#isim
+				strr = str(self.translated[1][i][0])
+				if strr in self.names2:
+					table = self.names2[strr]
+					column = self.columns[table]
 					self.printable = self.join_mean(self.translated[1][i][1])
 					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into isim(id,i_anlam) values(?,?)",(self.id,self.printable))
-
-				elif self.translated[1][i][0] == "fiil":
-					#fiil 
-					self.printable = self.join_mean(self.translated[1][i][1])
-					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into fiil(id,f_anlam) values(?,?)",(self.id,self.printable))
-					
-				elif self.translated[1][i][0] == "bağlaç":
-					#baglac
-					self.printable = self.join_mean(self.translated[1][i][1])
-					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into baglac(id,b_anlam) values(?,?)",(self.id,self.printable))
-					
-				elif self.translated[1][i][0] == "edat":
-					#edat 
-					self.printable = self.join_mean(self.translated[1][i][1])
-					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into edat(id,e_anlam) values(?,?)",(self.id,self.printable))
-
-				elif self.translated[1][i][0] == "sıfat":
-					#sifat
-					self.printable = self.join_mean(self.translated[1][i][1])
-					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into sifat(id,s_anlam) values(?,?)",(self.id,self.printable))
-
-				elif self.translated[1][i][0] == "zarf":
-					#zarf
-					self.printable = self.join_mean(self.translated[1][i][1])
-					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into zarf(id,z_anlam) values(?,?)",(self.id,self.printable))
-				elif self.translated[1][i][0] == "zamir":
-					self.printable = self.join_mean(self.translated[1][i][1])
-					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into zamir(id,zz_anlam) values(?,?)",(self.id,self.printable))
+					self.cursor.execute("insert into %s(id,%s) values(?,?)"%(table,column),(self.id,self.printable))
 
 				else:
 					print self.translated[1][i][0]
@@ -200,11 +141,13 @@ class Translater(object):
 			# print "Offline mod başlıyor"
 			self.offline_mod(word)
 			print ""
-		
-if len(sys.argv) == 2:
-	if sys.argv[1] == "--clean":
-		Translater().clean_db()
+try:		
+	if len(sys.argv) == 2:
+		if sys.argv[1] == "--clean":
+			Translater().clean_db()
+		else:
+			pass
 	else:
-		pass
-else:
-	Translater().listener()
+		Translater().listener()
+except KeyboardInterrupt:
+	pass
