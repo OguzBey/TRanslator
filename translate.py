@@ -1,17 +1,18 @@
 #! -*- coding: utf-8 -*-
 
-import pyperclip
+import xerox
 from googletrans import Translator
 import sys
 import sqlite3
 from colorama import Fore,Style
 from os import system
 from time import sleep
+from re import findall
 
 reload(sys)
 sys.setdefaultencoding("UTF-8")
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __author__ = "OguzBey"
 __contact__ = "cfmelun@gmail.com" 
 
@@ -45,7 +46,8 @@ class Translater(object):
 		pass
 
 	def flush(self):
-		pyperclip.copy("")
+		# print "2"
+		xerox.copy("")
 		pass
 
 	def notify(self, title, message):
@@ -54,7 +56,7 @@ class Translater(object):
 		system(cmd)
 
 	def copy(self):
-		self.c_word = pyperclip.paste()
+		self.c_word = xerox.paste()
 		self.c_word = self.c_word.rstrip(" ")
 		self.c_word = self.c_word.lstrip(" ")
 		self.c_word = self.c_word.lower()
