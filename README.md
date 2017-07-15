@@ -9,7 +9,7 @@ Yabancı kelimeleri Türkçeye çevirin !
   - Bildirim özelliği(Sadece Linux)
 
 ### Harici kütüphaneler
-- pyperclip
+- xerox
 - googletrans
 - colorama
 
