@@ -93,7 +93,7 @@ class Translater(object):
 			self.anlam = cek.fetchone()
 			if self.anlam:
 				if self.name in self.columns:
-					self.notify(self.c_word + " -- " + self.name, self.anlam[0])
+					self.notify(word + " -- " + self.name, self.anlam[0])
 					print self.colors['yellow']+self.name+": "+self.colors['reset']+self.colors['magenta']+self.colors['bold']+self.anlam[0]+self.colors['reset']
 			else:
 				pass
@@ -111,15 +111,25 @@ class Translater(object):
 			print "Bu kelimeden çok fazla var"
 			print self.sayi
 			sys.exit()
-	def join_mean(self,list):
+
+	def join_mean(self, liste):
 
 		self.printable = ""
-		for means in list:
+		for means in liste:
 			self.printable += means+", "
 		return self.printable.rstrip(", ")
 
-	def cevir(self,word):
-		self.translated = self.translator._translate(word,self.select_languages)
+	def cevir(self, word):
+		self.translated = self.translator._translate(word, self.select_languages)
+		# print self.translated
+		# return 0
+		# count = 0
+		# for i in self.translated:
+		# 	print str(count)+"\n\n"
+		# 	print i
+		# 	count +=1
+		# return 1
+		
 		if self.translated[1]:
 			self.cursor.execute("insert into kelimeler(kelime) values(?)",(word,))
 			cek = self.cursor.execute("select id from kelimeler where kelime=?",(word,))
@@ -133,9 +143,9 @@ class Translater(object):
 					table = self.names2[strr]
 					column = self.columns[table]
 					self.printable = self.join_mean(self.translated[1][i][1])
-					self.notify(self.c_word + " -- " + self.translated[1][i][0], self.printable)
+					self.notify(word + " -- " + self.translated[1][i][0], self.printable)
 					print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
-					self.cursor.execute("insert into %s(id,%s) values(?,?)"%(table,column),(self.id,self.printable))
+					self.cursor.execute("insert into %s(id,%s) values(?,?)"%(table,column),(self.id, self.printable))
 
 				else:
 					print self.translated[1][i][0]
@@ -144,6 +154,19 @@ class Translater(object):
 			self.connection.commit()
 			print "\n\n"
 			print self.colors['red']+self.colors['bold']+"[!]"+self.colors['reset']+self.colors['green']+self.colors['bold']+" Veritabanına eklendi.."+self.colors['reset']
+
+		elif self.translated[0][0][0] != word: # Tek bir anlamı çıktığında örneğin motherboard kelimesinde tek bir anlam çıkıyor..
+			self.cursor.execute("insert into kelimeler(kelime) values(?)",(word,))
+			cek = self.cursor.execute("select id from kelimeler where kelime=?",(word,))
+			self.id = str(cek.fetchone()[0])
+			print self.colors['yellow']+"Tek Anlamda"+": \n"+self.colors['reset'] # sanırım isim IDK
+			table = "isim"
+			column = "i_anlam"
+			self.printable = self.translated[0][0][0]
+			self.notify(word + " -- Tek Anlam", self.printable)
+			print self.colors['red']+self.colors['bold']+self.printable+self.colors['reset']
+			self.cursor.execute("insert into %s(id,%s) values(?,?)"%(table,column),(self.id, self.printable))
+
 		else:
 			print "Çeviri yok"
 
