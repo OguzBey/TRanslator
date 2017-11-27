@@ -12,7 +12,7 @@ from re import findall
 reload(sys)
 sys.setdefaultencoding("UTF-8")
 
-__version__ = "1.1.2"
+__version__ = "1.1.3"
 __author__ = "OguzBey"
 __contact__ = "cfmelun@gmail.com" 
 
@@ -27,6 +27,9 @@ class Translater(object):
 		self.cursor = self.connection.cursor()
 		self.columns = {'isim':'i_anlam','fiil':'f_anlam','zarf':'z_anlam','edat':'e_anlam','baglac':'b_anlam','sifat':'s_anlam','zamir':'zz_anlam'}
 		self.names2 = {'isim':'isim','zarf':'zarf','bağlaç':'baglac','sıfat':'sifat','zamir':'zamir','fiil':'fiil','edat':'edat'}
+		self.c_word = ""
+		self.c_word_last = ""
+		self.c_word_new = ""
 	def clean_db(self):
 		self.cursor.execute("drop table kelimeler")
 		for key, value in self.columns.iteritems():
@@ -62,20 +65,22 @@ class Translater(object):
 		self.c_word = self.c_word.lower()
 		if len(self.c_word) > 1 and len(self.c_word) < 20:
 			if self.c_word.count(" ") < 2:
-				return True
+				return self.c_word
 			else:
-				return False
+				return "ff"
 		else:
-			return False
+			return "ff"
 		pass
 
 	def listener(self):
 		self.flush()
 		while True:
 			sleep(0.2)
-			if self.copy():
-				self.run(self.c_word)
-				self.flush()
+			self.c_word_new = self.copy() # new words*
+			if self.c_word_new != "ff" and self.c_word_last != self.c_word_new:
+				self.c_word_last = self.c_word_new # last words*
+				self.run(self.c_word_new)
+				# self.flush()
 			else:
 				pass
 		pass
@@ -142,7 +147,7 @@ class Translater(object):
 		else:
 			print "Çeviri yok"
 
-	def run(self,word):
+	def run(self, word):
 		system('clear')
 		print ">> "+self.colors['cyan']+self.colors['bold']+word.upper()+self.colors['reset']+"\n"
 		if self.value_control(word) == 0:
