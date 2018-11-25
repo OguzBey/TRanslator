@@ -30,6 +30,7 @@ class Translater(object):
 		self.c_word = ""
 		self.c_word_last = ""
 		self.c_word_new = ""
+
 	def clean_db(self):
 		self.cursor.execute("drop table kelimeler")
 		for key, value in self.columns.iteritems():
@@ -120,16 +121,7 @@ class Translater(object):
 		return self.printable.rstrip(", ")
 
 	def cevir(self, word):
-		self.translated = self.translator._translate(word, self.select_languages)
-		# print self.translated
-		# return 0
-		# count = 0
-		# for i in self.translated:
-		# 	print str(count)+"\n\n"
-		# 	print i
-		# 	count +=1
-		# return 1
-		
+		self.translated = self.translator._translate(word, self.select_languages, 'auto')
 		if self.translated[1]:
 			self.cursor.execute("insert into kelimeler(kelime) values(?)",(word,))
 			cek = self.cursor.execute("select id from kelimeler where kelime=?",(word,))
@@ -179,6 +171,7 @@ class Translater(object):
 			# print "Offline mod başlıyor"
 			self.offline_mod(word)
 			print ""
+
 try:		
 	if len(sys.argv) == 2:
 		if sys.argv[1] == "--clean":
