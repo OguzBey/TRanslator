@@ -1,4 +1,4 @@
-# TRanslater
+# TRanslator
 
 
 Yabancı kelimeleri Türkçeye çevirin !
@@ -19,7 +19,7 @@ Yabancı kelimeleri Türkçeye çevirin !
 - notify-send programı linuxta yüklü olması gerekmekte
 
 ```sh
-$ cd TRanslater
+$ cd TRanslator
 $ python2 translate.py
 ```
 
@@ -47,11 +47,11 @@ Daha sistematik ve modüler yapacağım umarım :p
 ![notify](screenshot/notify.png)
 
 ![alt 
-text](https://raw.githubusercontent.com/OguzBey/TRanslater/master/screenshot/ss.png)
+text](https://raw.githubusercontent.com/OguzBey/TRanslator/master/screenshot/ss.png)
 
 2.seferde aynı kelimeyi veritabanından çeker
 ![alt 
-text](https://raw.githubusercontent.com/OguzBey/TRanslater/master/screenshot/ss2.png)
+text](https://raw.githubusercontent.com/OguzBey/TRanslator/master/screenshot/ss2.png)
 
 Lisans
 ----
