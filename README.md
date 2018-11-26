@@ -10,7 +10,7 @@ Yabancı kelimeleri Türkçeye çevirin !
 
 ### Harici kütüphaneler
 - xerox
-- googletrans
+- https://github.com/BoseCorp/py-googletrans (fixli googletrans)
 - colorama
 
 ### İhtiyaçlar
@@ -28,20 +28,6 @@ Veritabanını temizlemek için
 ```sh
 $ python2 translate.py --clean
 ```
-
-### Eklemeyi düşündüklerim
-
-- Widget özelliği olabilir (Arayüz)
-- Veritabanını üzerinde daha fazla işlem sağlamak
-- Log tutturmak
-
-
-### Geliştirme
-
-Şimdilik birazcık karmaşık gelebilir ilk kullanılabilir versionunu 
-çıkardık. 
-
-Daha sistematik ve modüler yapacağım umarım :p
 
 ## Ekran Görüntüleri
 ![notify](screenshot/notify.png)
